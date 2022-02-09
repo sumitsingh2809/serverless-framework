@@ -15,6 +15,10 @@ provider:
         - dynamodb:UpdateItem
       Resource: "*"
 
+plugins:
+  - serverless-offline
+  - serverless-dynamodb-local
+
 functions:
   fetchTodos:
     handler: src/fetchTodos.handler
@@ -22,25 +26,27 @@ functions:
       - http:
           path: /todos
           method: get
+
   addTodo:
     handler: src/addTodo.handler
     events:
       - http:
           path: /todos
           method: post
+
   fetchTodo:
     handler: src/fetchTodo.handler
     events:
       - http:
           path: /todos/{id}
           method: get
+
   updateTodo:
     handler: src/updateTodo.handler
     events:
       - http:
           path: /todos/{id}
           method: put
-  
 
 resources:
   Resources:
@@ -55,3 +61,14 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    migration:
+      dir: offline/migrations

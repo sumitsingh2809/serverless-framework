@@ -3,9 +3,15 @@ const AWS = require('aws-sdk');
 const middy = require('@middy/core');
 const httpJsonBodyParser = require('@middy/http-json-body-parser');
 
-const addTodo = async (event) => {
-    const dynamodb = new AWS.DynamoDB.DocumentClient();
+const options = {};
+if(process.env.IS_OFFLINE) {
+    options['region'] = 'localhost',
+    options['endpoint'] = 'http://localhost:8000'
+}
 
+const dynamodb = new AWS.DynamoDB.DocumentClient(options);
+
+const addTodo = async (event) => {
     const { todo } = event.body;
     const createdAt = new Date().toISOString();
     const id = v4();
