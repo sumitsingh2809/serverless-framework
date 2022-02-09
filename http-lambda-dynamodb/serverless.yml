@@ -1,4 +1,4 @@
-service: aws-serverless-node-http-api-project
+service: http-lambda-dynamodb
 frameworkVersion: '3'
 
 provider:
